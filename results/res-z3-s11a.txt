@@ -1,0 +1,29 @@
+(:added-eqs           41932
+ :arith-add-rows      23895
+ :arith-assert-diseq  6627
+ :arith-assert-lower  35743
+ :arith-assert-upper  75329
+ :arith-bound-prop    4502
+ :arith-conflicts     151
+ :arith-eq-adapter    2853
+ :arith-fixed-eqs     5281
+ :arith-offset-eqs    8971
+ :arith-pivots        953
+ :binary-propagations 42347
+ :conflicts           514
+ :decisions           13696
+ :del-clause          2878
+ :eliminated-vars     28
+ :final-checks        1
+ :max-memory          6.79
+ :memory              3.40
+ :minimized-lits      93
+ :mk-bool-var         5651
+ :mk-clause           6984
+ :num-allocs          5725880
+ :num-checks          1
+ :propagations        104364
+ :restarts            4
+ :rlimit-count        1098971)
+TotalTime
+0.29019856452941895

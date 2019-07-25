@@ -1,0 +1,10 @@
+(:eliminated-vars 81
+ :max-memory      6.11
+ :memory          3.35
+ :mk-bool-var     5
+ :num-allocs      12609999
+ :rlimit-count    660191)
+TotalTime
+0.05921792984008789
+Time Constraint Programming
+0.011105060577392578

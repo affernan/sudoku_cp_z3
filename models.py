@@ -1,7 +1,9 @@
 from z3 import *
-from cp import reduce_domain
+from cp import reduce_domainB
+import time
 
-def smt_model(instance):
+def smt_model(instance, name):
+    tini = time.time()
     # 9x9 matrix of integer variables
     X = [[Int("x_%s_%s" % (i + 1, j + 1)) for j in range(9)]
          for i in range(9)]
@@ -44,34 +46,46 @@ def smt_model(instance):
 
         for x in r:
             print(x)
-        print(s.statistics())
+
+        #print(s.statistics())
+
+        #res = open("results/res-z3-" + name.replace("test/","")+".txt" , "w")
+        #res.write(str(s.statistics()))
+        #res.close()
+
     else:
         print("unsat")
 
+    tend = time.time()
+    TOTAL = tend - tini
+
+    res = open("results/res-z3-" + name.replace("test/","")+".txt" , "w")
+    res.write(str(s.statistics()))
+    res.write("\nTotalTime\n")
+    res.write(str(TOTAL))
+    res.close()
 
 
 
-def cp_smt_model(instance):
+
+def cp_smt_model(instance, name):
     # 9x9 matrix of integer variables
+    tini = time.time()
     X = [[Int("x_%s_%s" % (i + 1, j + 1)) for j in range(9)]
          for i in range(9)]
 
-    cells_c = reduce_domain(instance, 9, 9, X)
+    t0 = time.time()
+    cells_c = reduce_domainB(instance, 9, 9, X)
+    t1 = time.time()
+    total = t1-t0
 
-    # each cell contains a value in {1, ..., 9}
-    #cells_c = [And(1 <= X[i][j], X[i][j] <= 9)
-     #         for i in range(9) for j in range(9)]
-
-    #cells_c = list(eval(domain))
-
-    # each row contains a digit at most once
     rows_c = [Distinct(X[i]) for i in range(9)]
 
-    # each column contains a digit at most once
+    #each column contains a digit at most once
     cols_c = [Distinct([X[i][j] for i in range(9)])
               for j in range(9)]
 
-    # each 3x3 square contains a digit at most once
+    #each 3x3 square contains a digit at most once
     sq_c = [Distinct([X[3 * i0 + i][3 * j0 + j]
                       for i in range(3) for j in range(3)])
             for i0 in range(3) for j0 in range(3)]
@@ -86,6 +100,7 @@ def cp_smt_model(instance):
     s = Solver()
     s.add(sudoku_c + instance_c)
 
+
     if s.check() == sat:
         m = s.model()
         r = [[m.evaluate(X[i][j]) for j in range(9)]
@@ -93,6 +108,27 @@ def cp_smt_model(instance):
 
         for x in r:
             print(x)
-        print(s.statistics())
+
+        #print(s.statistics())
+
+
+
     else:
         print("unsat")
+
+    res = open("results/res-cp-z3-smtlib-" + name.replace("test/","")+".txt", "w")
+    res.write(s.to_smt2())
+    res.close()
+    tend = time.time()
+    TOTAL = tend-tini
+
+    res = open("results/res-cp-z3-" + name.replace("test/", "") + ".txt", "w")
+    res.write(str(s.statistics()))
+    res.write("\nTotalTime\n")
+    res.write(str(TOTAL))
+
+    res.write("\nTime Constraint Programming\n")
+    res.write(str(total))
+    res.close()
+
+
